@@ -5,6 +5,9 @@ import mongoose from "mongoose";
 import compression from "compression";
 import ensureInitialData from "./import";
 import apiRouter from "./api";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(compression());
@@ -20,6 +23,7 @@ const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 const mongoDbUri =
   process.env.MONGODB_URI || "mongodb://localhost:27017/trivia";
+console.log("envs", process.env.MONGODB_URI, process.env.PORT);
 console.log(mongoDbUri);
 const db = mongoose.connect(mongoDbUri, {
   connectTimeoutMS: 30000,
@@ -28,7 +32,7 @@ const db = mongoose.connect(mongoDbUri, {
   maxPoolSize: 10,
   retryWrites: true,
   maxIdleTimeMS: 30000,
-  family: "ipv4",
+  family: 4,
 });
 db.catch((err) => {
   console.log(`Failed to connect to mongodb: ${mongoDbUri}`);
@@ -43,4 +47,3 @@ app.use("/api", apiRouter);
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
-
